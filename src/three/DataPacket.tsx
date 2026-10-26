@@ -3,6 +3,7 @@ import { useEffect, useMemo, useRef } from 'react'
 import * as THREE from 'three'
 import { curve } from './constants'
 import { COLORS } from './theme'
+import { phaseAt } from '../lib/identityTimeline'
 import { scrollStore, smoothstep } from '../lib/scrollStore'
 
 const TRAIL = 30
@@ -60,7 +61,9 @@ export function DataPacket() {
 
   useFrame(({ clock, gl }) => {
     const u = scrollStore.u
-    const fade = smoothstep(0.012, 0.05, u) // hidden at the very top of the page
+    // Hidden at the very top of the page, and while the identity card is on screen so the
+    // glowing head never sits behind its text.
+    const fade = smoothstep(0.012, 0.05, u) * (1 - phaseAt(scrollStore.identity).alpha)
     curve.getPoint(Math.min(u + 0.03, 1), tmp)
     tmp.x += 0.95
     tmp.y += -0.5 + Math.sin(clock.elapsedTime * 2.2) * 0.05

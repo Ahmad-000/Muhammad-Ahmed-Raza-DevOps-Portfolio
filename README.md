@@ -75,3 +75,24 @@ src/
   lib/          scrollStore (shared scroll state), terminal (command engine)
   data/         the content you edit
 ```
+
+## Floating identity card
+
+A holographic identity card floats through the 3D scene between the hero and the Tech Stack section.
+It is one component split into two layers that share a single pose, with no second canvas or render loop:
+
+- **Glass, edge light, data traces and nodes** are drawn inside the existing canvas by `src/three/IdentityHologram.tsx`.
+- **Text, photo and links** are real HTML (`src/components/identity/`), pinned to the same pose with a CSS 3D matrix
+  derived from the camera every frame, so they stay crisp, selectable and clickable.
+
+| File | Purpose |
+| --- | --- |
+| `src/data/identity.ts` | Everything printed on the card. Name, title and links come from `profile.ts`. |
+| `public/images/profile-photo.jpg` | Your portrait, used unmodified. It is only cropped with CSS (`object-position` in `identity.css`). |
+| `src/lib/identityTimeline.ts` | When the card flies in, holds and flies out (`ENTER_END`, `EXIT_START`). |
+| `src/components/identity/IdentitySection.tsx` | The scroll section. Its height sets how long the card is on screen (`h-[230svh]`). |
+| `src/lib/identityStore.ts` | Plain shared state between the HTML card and the 3D layer. |
+
+To swap the photo, replace `public/images/profile-photo.jpg` (keep the name, or update `photo.src`, `width` and `height` in `identity.ts`).
+
+With reduced motion on, without WebGL, or if the 3D scene fails, the card is an ordinary glass card in the page flow, so the content is never lost.
