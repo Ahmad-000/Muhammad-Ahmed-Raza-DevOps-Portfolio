@@ -14,6 +14,12 @@ export const scrollStore = {
   pointer: { x: 0, y: 0, active: false },
   /** Smoothed position along the camera path (0..1), written by CameraRig. */
   u: 0,
+  /**
+   * Progress through the identity card's own scroll section (0..1). 0 when the section's
+   * top reaches the top of the viewport, 1 when its bottom reaches the bottom.
+   * Written by useScrollBridge, read by the identity hologram.
+   */
+  identity: 0,
 }
 
 export const clamp01 = (v: number) => Math.min(1, Math.max(0, v))

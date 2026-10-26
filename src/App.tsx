@@ -4,6 +4,7 @@ import { Contact } from './components/Contact'
 import { ContactForm } from './components/ContactForm'
 import { Footer } from './components/Footer'
 import { Hero } from './components/Hero'
+import { IdentitySection } from './components/identity/IdentitySection'
 import { Nav } from './components/Nav'
 import { StaticBackdrop } from './components/StaticBackdrop'
 import { Terminal } from './components/Terminal'
@@ -38,6 +39,7 @@ function Page() {
       <Nav />
       <main id="main" className="relative z-10">
         <Hero />
+        <IdentitySection />
         <TechStack />
         <Projects />
         <Terminal />

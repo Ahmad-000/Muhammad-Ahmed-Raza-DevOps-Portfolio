@@ -4,6 +4,7 @@ import { ClusterSphere } from './ClusterSphere'
 import { DataPacket } from './DataPacket'
 import { DataStream } from './DataStream'
 import { HoloGrid } from './HoloGrid'
+import { IdentityHologram } from './IdentityHologram'
 import { PipelineGates } from './PipelineGates'
 import { ServerRacks } from './ServerRacks'
 import { FINAL_CENTER } from './constants'
@@ -57,6 +58,8 @@ export function Scene({ tier, reduced }: Props) {
             seed={19}
           />
           <DataPacket />
+          {/* Floating identity card: glass drawn here, the HTML card pinned to the same pose. */}
+          <IdentityHologram tier={tier} />
         </>
       )}
     </>

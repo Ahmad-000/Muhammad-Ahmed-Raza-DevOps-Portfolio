@@ -9,11 +9,28 @@ export function useScrollBridge() {
   useEffect(() => {
     const maxScroll = () => Math.max(1, document.documentElement.scrollHeight - window.innerHeight)
 
+    // The identity card's scroll section: cached on measure so scrolling never reads layout.
+    let idTop = 0
+    let idSpan = 0
+
     const onScroll = () => {
       scrollStore.progress = clamp01(window.scrollY / maxScroll())
+      scrollStore.identity = idSpan > 1 ? clamp01((window.scrollY - idTop) / idSpan) : 0
+    }
+
+    const measureIdentity = () => {
+      const el = document.querySelector<HTMLElement>('[data-identity]')
+      if (!el) {
+        idSpan = 0
+        return
+      }
+      const r = el.getBoundingClientRect()
+      idTop = r.top + window.scrollY
+      idSpan = r.height - window.innerHeight
     }
 
     const measure = () => {
+      measureIdentity()
       const vh = window.innerHeight
       const els = Array.from(document.querySelectorAll<HTMLElement>('[data-station]')).sort(
         (a, b) => Number(a.dataset.station) - Number(b.dataset.station),

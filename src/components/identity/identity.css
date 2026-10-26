@@ -1,0 +1,370 @@
+/*
+ * Identity card.
+ *
+ * Every size is in "u", 1% of the card's own width (via container query units),
+ * so the card scales as one piece and the same markup works at any width.
+ * Below 600px it switches to a compact arrangement (keep in sync with
+ * COMPACT_BELOW in src/lib/identityStore.ts).
+ */
+
+/* ---------- placement ---------- */
+
+/* While the 3D scene runs, the card lives in a fixed layer and the hologram
+   places it in 3D. Hidden until the hologram reveals it. */
+.idc-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+  visibility: hidden;
+}
+.idc-layer .idc-pose {
+  pointer-events: none;
+}
+/* A faint or flying card is not clickable; only the settled card is. */
+.idc-layer .idc-pose[data-live] a {
+  pointer-events: auto;
+}
+
+/* Fallback: an ordinary centred card in the page flow. */
+.idc-flow {
+  display: flex;
+  justify-content: center;
+  padding-inline: 1.5rem;
+}
+/* The pose box needs a definite width: .idc-wrap is a size container, so a percentage
+   width inside a shrink-wrapped parent would resolve to 0 and the card would vanish. */
+.idc-flow .idc-pose {
+  width: min(100%, 46rem);
+}
+.idc-flow .idc-wrap {
+  width: 100%;
+}
+
+.idc-wrap {
+  container-type: inline-size;
+}
+
+/* ---------- card ---------- */
+
+.idc {
+  --u: 1cqw;
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: calc(var(--u) * 27) minmax(0, 1fr);
+  grid-template-rows: auto minmax(0, 1fr);
+  grid-template-areas:
+    'photo head'
+    'photo rest';
+  column-gap: calc(var(--u) * 4.6);
+  padding: calc(var(--u) * 4.4);
+  aspect-ratio: 1.585; /* ID-1 card proportions */
+  border-radius: calc(var(--u) * 4.4);
+  color: var(--color-ink);
+  text-align: left;
+}
+
+/* Photo and its holographic frame */
+.idc-photo-wrap {
+  grid-area: photo;
+  position: relative;
+  min-height: 0;
+}
+.idc-photo {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: calc(var(--u) * 2.6);
+  background: #0a111c;
+  box-shadow:
+    0 0 0 1px rgba(0, 240, 255, 0.5),
+    0 0 calc(var(--u) * 2.6) rgba(0, 240, 255, 0.2);
+}
+.idc-photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 22%;
+}
+/* Rim light only at the very edges; the face itself is untouched. */
+.idc-photo::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  background:
+    linear-gradient(90deg, rgba(0, 240, 255, 0.28), transparent 15%),
+    linear-gradient(0deg, rgba(121, 40, 202, 0.3), transparent 18%);
+}
+.idc-brackets {
+  position: absolute;
+  inset: calc(var(--u) * -1.3);
+  pointer-events: none;
+}
+.idc-brackets i {
+  position: absolute;
+  width: calc(var(--u) * 2.8);
+  height: calc(var(--u) * 2.8);
+  border: 0 solid var(--color-cyan-neon);
+  filter: drop-shadow(0 0 calc(var(--u) * 0.5) rgba(0, 240, 255, 0.7));
+}
+.idc-brackets .tl {
+  top: 0;
+  left: 0;
+  border-width: 2px 0 0 2px;
+  border-top-left-radius: calc(var(--u) * 1.2);
+}
+.idc-brackets .tr {
+  top: 0;
+  right: 0;
+  border-width: 2px 2px 0 0;
+  border-top-right-radius: calc(var(--u) * 1.2);
+}
+.idc-brackets .bl {
+  bottom: 0;
+  left: 0;
+  border-width: 0 0 2px 2px;
+  border-bottom-left-radius: calc(var(--u) * 1.2);
+}
+.idc-brackets .br {
+  bottom: 0;
+  right: 0;
+  border-width: 0 2px 2px 0;
+  border-bottom-right-radius: calc(var(--u) * 1.2);
+}
+
+/* Name, title */
+.idc-head {
+  grid-area: head;
+  min-width: 0;
+}
+.idc-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--u) * 1.4);
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: calc(var(--u) * 1.55);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #aebccf;
+}
+.idc-eyebrow .led {
+  width: calc(var(--u) * 0.9);
+  height: calc(var(--u) * 0.9);
+}
+.idc-name {
+  margin: calc(var(--u) * 1.8) 0 0;
+  font-size: calc(var(--u) * 5.3);
+  font-weight: 800;
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+}
+.idc-title {
+  margin: calc(var(--u) * 1.3) 0 0;
+  font-size: calc(var(--u) * 3);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  font-stretch: 90%;
+  color: var(--color-cyan-neon);
+  text-shadow: 0 0 calc(var(--u) * 2.2) rgba(0, 240, 255, 0.35);
+}
+
+/* Education, certification, links */
+.idc-rest {
+  grid-area: rest;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: calc(var(--u) * 2.2);
+}
+.idc-rule {
+  height: 1px;
+  margin: 0;
+  border: 0;
+  background: linear-gradient(90deg, rgba(0, 240, 255, 0.55), rgba(121, 40, 202, 0.35) 55%, transparent);
+}
+.idc-uni {
+  margin: 0;
+  font-size: calc(var(--u) * 2.4);
+  font-weight: 650;
+  line-height: 1.25;
+  color: var(--color-ink);
+}
+.idc-sub {
+  margin: calc(var(--u) * 0.3) 0 0;
+  font-size: calc(var(--u) * 1.95);
+  line-height: 1.35;
+  color: #aebccf;
+}
+.idc-cert {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  gap: calc(var(--u) * 1.2);
+  margin: 0;
+  padding: calc(var(--u) * 0.9) calc(var(--u) * 1.8) calc(var(--u) * 0.9) calc(var(--u) * 1.3);
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: calc(var(--u) * 1.75);
+  line-height: 1.2;
+  color: var(--color-ink);
+  background: rgba(121, 40, 202, 0.18);
+  box-shadow: inset 0 0 0 1px rgba(185, 139, 255, 0.5);
+}
+.idc-cert svg {
+  flex: none;
+  width: calc(var(--u) * 2.5);
+  height: calc(var(--u) * 2.5);
+}
+.idc-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: calc(var(--u) * 1.4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.idc-links a {
+  display: inline-flex;
+  align-items: center;
+  gap: calc(var(--u) * 1);
+  min-height: max(calc(var(--u) * 4.6), 2rem);
+  padding: 0 calc(var(--u) * 1.8);
+  border-radius: calc(var(--u) * 1.6);
+  font-size: calc(var(--u) * 1.8);
+  font-weight: 600;
+  color: var(--color-ink);
+  text-decoration: none;
+  background: rgba(255, 255, 255, 0.03);
+  box-shadow: inset 0 0 0 1px var(--color-slate-line);
+  transition:
+    box-shadow 0.2s ease,
+    background-color 0.2s ease;
+}
+.idc-links a:hover {
+  background: rgba(0, 240, 255, 0.09);
+  box-shadow: inset 0 0 0 1px rgba(0, 240, 255, 0.65);
+}
+.idc-links svg {
+  width: calc(var(--u) * 2.1);
+  height: calc(var(--u) * 2.1);
+  fill: var(--color-cyan-neon);
+}
+@media (pointer: coarse) {
+  .idc-links a {
+    min-height: 44px;
+  }
+}
+
+/* Decorative network motif, behind the text. */
+.idc-net {
+  position: absolute;
+  z-index: -1;
+  top: calc(var(--u) * 3);
+  right: calc(var(--u) * 3.4);
+  width: calc(var(--u) * 24);
+  height: auto;
+  opacity: 0.6;
+  pointer-events: none;
+}
+.idc-net .pulse {
+  animation: ping-soft 3.2s ease-out infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+/* One-off light sweep, driven by --sw (0..1) from the hologram. */
+.idc-sheen {
+  --s: calc(var(--sw, 0) * 170% - 50%);
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  border-radius: inherit;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  background: linear-gradient(
+    105deg,
+    transparent calc(var(--s) - 14%),
+    rgba(255, 255, 255, 0.1) calc(var(--s) - 4%),
+    rgba(0, 240, 255, 0.16) var(--s),
+    rgba(121, 40, 202, 0.1) calc(var(--s) + 6%),
+    transparent calc(var(--s) + 14%)
+  );
+}
+
+/* ---------- compact layout (narrow cards) ---------- */
+
+@container (max-width: 599px) {
+  .idc {
+    aspect-ratio: auto;
+    grid-template-columns: calc(var(--u) * 30) minmax(0, 1fr);
+    grid-template-rows: auto auto;
+    grid-template-areas:
+      'photo head'
+      'rest rest';
+    column-gap: calc(var(--u) * 4.4);
+    row-gap: calc(var(--u) * 3.4);
+    padding: calc(var(--u) * 5.4);
+    border-radius: calc(var(--u) * 5.5);
+  }
+  .idc-photo-wrap {
+    aspect-ratio: 0.78;
+  }
+  .idc-photo {
+    border-radius: calc(var(--u) * 3.4);
+  }
+  .idc-eyebrow {
+    font-size: calc(var(--u) * 2.8);
+  }
+  .idc-eyebrow .led {
+    width: calc(var(--u) * 1.6);
+    height: calc(var(--u) * 1.6);
+  }
+  .idc-name {
+    margin-top: calc(var(--u) * 2.2);
+    font-size: calc(var(--u) * 6.4);
+  }
+  .idc-title {
+    font-size: calc(var(--u) * 3.8);
+  }
+  .idc-uni {
+    font-size: calc(var(--u) * 3.8);
+  }
+  .idc-sub {
+    font-size: calc(var(--u) * 3.2);
+  }
+  .idc-cert {
+    font-size: calc(var(--u) * 2.9);
+    padding: calc(var(--u) * 1.4) calc(var(--u) * 3) calc(var(--u) * 1.4) calc(var(--u) * 2.2);
+  }
+  .idc-cert svg {
+    width: calc(var(--u) * 4.2);
+    height: calc(var(--u) * 4.2);
+  }
+  .idc-links {
+    gap: calc(var(--u) * 2.4);
+  }
+  .idc-links a {
+    min-height: 44px;
+    padding: 0 calc(var(--u) * 3.4);
+    gap: calc(var(--u) * 1.8);
+    font-size: calc(var(--u) * 3.4);
+    border-radius: calc(var(--u) * 3);
+  }
+  .idc-links svg {
+    width: calc(var(--u) * 3.8);
+    height: calc(var(--u) * 3.8);
+  }
+  .idc-net {
+    width: calc(var(--u) * 30);
+    top: calc(var(--u) * 2);
+    right: calc(var(--u) * 2.5);
+  }
+}
