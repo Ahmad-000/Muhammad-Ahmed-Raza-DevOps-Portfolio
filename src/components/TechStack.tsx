@@ -1,3 +1,4 @@
+
 import { useEffect, useMemo, useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 import { categories, type Category, type Level, type Tool } from '../data/skills'
@@ -11,7 +12,7 @@ const levelStyle: Record<Level, string> = {
   Proficient: 'text-slate-mute border-slate-line',
 }
 
-/** Four-stage run for the selected tool, cycling the way a real pipeline would. */
+/** Animated illustration of a typical workflow for the selected technology. */
 function PipelineFlow({ stages }: { stages: string[] }) {
   const { reduced } = useEffects()
   const [step, setStep] = useState(reduced ? stages.length : 0)
@@ -21,18 +22,34 @@ function PipelineFlow({ stages }: { stages: string[] }) {
       setStep(stages.length)
       return
     }
+
     setStep(0)
-    const id = window.setInterval(() => setStep((s) => (s >= stages.length + 1 ? 0 : s + 1)), 900)
+
+    const id = window.setInterval(() => {
+      setStep((current) =>
+        current >= stages.length + 1 ? 0 : current + 1,
+      )
+    }, 900)
+
     return () => window.clearInterval(id)
   }, [stages, reduced])
 
   return (
-    <ol className="relative space-y-3" aria-label="Pipeline status">
-      <span aria-hidden="true" className="absolute top-3 bottom-3 left-[0.42rem] w-px bg-slate-line" />
+    <ol className="relative space-y-3" aria-label="Illustrative workflow stages">
+      <span
+        aria-hidden="true"
+        className="absolute top-3 bottom-3 left-[0.42rem] w-px bg-slate-line"
+      />
+
       {stages.map((name, i) => {
-        const state = i < step ? 'passed' : i === step ? 'running' : 'queued'
+        const state =
+          i < step ? 'passed' : i === step ? 'running' : 'queued'
+
         return (
-          <li key={name} className="relative flex items-center gap-3 text-sm">
+          <li
+            key={name}
+            className="relative flex items-center gap-3 text-sm"
+          >
             <span
               aria-hidden="true"
               className={`relative z-10 size-3.5 rounded-full border-2 transition-colors duration-300 ${
@@ -43,10 +60,22 @@ function PipelineFlow({ stages }: { stages: string[] }) {
                     : 'border-slate-line bg-obsidian'
               }`}
             />
-            <span className={state === 'queued' ? 'text-slate-mute' : 'text-ink'}>{name}</span>
+
+            <span
+              className={
+                state === 'queued' ? 'text-slate-mute' : 'text-ink'
+              }
+            >
+              {name}
+            </span>
+
             <span
               className={`ml-auto font-mono text-xs ${
-                state === 'passed' ? 'text-ok' : state === 'running' ? 'text-cyan-neon' : 'text-slate-mute'
+                state === 'passed'
+                  ? 'text-ok'
+                  : state === 'running'
+                    ? 'text-cyan-neon'
+                    : 'text-slate-mute'
               }`}
             >
               {state}
@@ -58,7 +87,13 @@ function PipelineFlow({ stages }: { stages: string[] }) {
   )
 }
 
-function Inspector({ tool, category }: { tool: Tool; category: Category }) {
+function Inspector({
+  tool,
+  category,
+}: {
+  tool: Tool
+  category: Category
+}) {
   return (
     <GlassPanel className="rounded-3xl p-6 lg:sticky lg:top-24">
       <div aria-live="polite">
@@ -72,20 +107,41 @@ function Inspector({ tool, category }: { tool: Tool; category: Category }) {
           >
             <div className="flex items-start justify-between gap-4">
               <div>
-                <h3 className="text-3xl font-bold tracking-tight">{tool.name}</h3>
-                <p className="mt-1 text-sm text-slate-mute">{category.title}</p>
+                <h3 className="text-2xl font-bold tracking-tight md:text-3xl">
+                  {tool.name}
+                </h3>
+
+                <p className="mt-1 text-sm text-slate-mute">
+                  {category.title}
+                </p>
               </div>
-              <span className={`rounded-full border px-3 py-1 text-sm font-medium ${levelStyle[tool.level]}`}>
+
+              <span
+                className={`rounded-full border px-3 py-1 text-sm font-medium ${levelStyle[tool.level]}`}
+              >
                 {tool.level}
               </span>
             </div>
 
             <div className="mt-6">
               <div className="mb-2 flex justify-between text-sm">
-                <span className="text-slate-mute">Proficiency</span>
-                <span className="font-mono text-ink tabular-nums">{tool.score}/100</span>
+                <span className="text-slate-mute">
+                  Self-assessed skill indicator
+                </span>
+
+                <span className="font-mono text-ink tabular-nums">
+                  {tool.score}/100
+                </span>
               </div>
-              <div className="h-1.5 overflow-hidden rounded-full bg-slate-line/70">
+
+              <div
+                className="h-1.5 overflow-hidden rounded-full bg-slate-line/70"
+                role="progressbar"
+                aria-label={`${tool.name} self-assessed skill indicator`}
+                aria-valuemin={0}
+                aria-valuemax={100}
+                aria-valuenow={tool.score}
+              >
                 <motion.div
                   className="h-full origin-left rounded-full bg-cyan-neon shadow-[0_0_12px_var(--color-cyan-neon)]"
                   style={{ originX: 0 }}
@@ -94,13 +150,36 @@ function Inspector({ tool, category }: { tool: Tool; category: Category }) {
                   transition={{ duration: 0.5, ease: 'easeOut' }}
                 />
               </div>
-              <p className="mt-2 text-sm text-slate-mute">{tool.years} years in production</p>
+
+              <p className="mt-2 text-sm text-slate-mute">
+                {tool.years} {tool.years === 1 ? 'year' : 'years'} of
+                hands-on learning and project experience
+              </p>
             </div>
 
-            <p className="mt-6 leading-relaxed text-[#c0cbdb]">{tool.uses}</p>
+            <p className="mt-6 leading-relaxed text-[#c0cbdb]">
+              {tool.uses}
+            </p>
 
             <div className="mt-6 rounded-xl border border-slate-line bg-void/60 p-4">
-              <p className="mb-4 font-mono text-xs break-words text-slate-mute">last run: {tool.lastRun}</p>
+              <p className="mb-2 font-mono text-xs text-slate-mute">
+                PRACTICAL PROJECT EXPERIENCE
+              </p>
+
+              <p className="mb-5 text-sm text-ink">
+                {tool.projectUse}
+              </p>
+
+              <div className="mb-4 flex items-center justify-between gap-2">
+                <p className="font-mono text-xs text-slate-mute">
+                  ILLUSTRATIVE WORKFLOW
+                </p>
+
+                <span className="rounded-full border border-cyan-neon/30 px-2 py-1 font-mono text-[10px] text-cyan-neon">
+                  WORKFLOW
+                </span>
+              </div>
+
               <PipelineFlow stages={category.flow} />
             </div>
           </motion.div>
@@ -111,34 +190,63 @@ function Inspector({ tool, category }: { tool: Tool; category: Category }) {
 }
 
 export function TechStack() {
-  const [selected, setSelected] = useState('kubernetes')
+  const [selected, setSelected] = useState('aws')
 
   const { tool, category } = useMemo(() => {
     for (const c of categories) {
-      const t = c.tools.find((x) => x.id === selected)
-      if (t) return { tool: t, category: c }
+      const selectedTool = c.tools.find(
+        (item) => item.id === selected,
+      )
+
+      if (selectedTool) {
+        return {
+          tool: selectedTool,
+          category: c,
+        }
+      }
     }
-    return { tool: categories[1].tools[1], category: categories[1] }
+
+    return {
+      tool: categories[0].tools[0],
+      category: categories[0],
+    }
   }, [selected])
 
   return (
-    <section id="stack" data-station="1" aria-labelledby="stack-title" className="relative py-28 md:py-36">
+    <section
+      id="stack"
+      data-station="1"
+      aria-labelledby="stack-title"
+      className="relative py-28 md:py-36"
+    >
       <div className="mx-auto max-w-7xl px-6 md:px-10">
-        <SectionHeading id="stack-title" title="Tools I run in production">
-          Hover or focus a tool to see how I use it and what a run of its pipeline looks like.
+        <SectionHeading
+          id="stack-title"
+          title="DevOps Tools & Technologies"
+        >
+          Explore the technologies I use across AWS cloud infrastructure,
+          Infrastructure as Code, Linux administration, Docker containers,
+          CI/CD automation, and full-stack application development.
         </SectionHeading>
 
         <div className="mt-12 grid gap-6 lg:grid-cols-[1fr_24rem]">
-          {/* The patch panel: four columns of tools separated by hairlines, not four separate cards. */}
+          {/* Interactive technology categories */}
           <GlassPanel className="rounded-3xl">
             <div className="grid sm:grid-cols-2 sm:[&>*:nth-child(even)]:border-l sm:[&>*:nth-child(n+3)]:border-t [&>*]:border-slate-line">
               {categories.map((c) => (
                 <div key={c.id} className="p-5 md:p-6">
-                  <h3 className="text-xl font-semibold tracking-tight">{c.title}</h3>
-                  <p className="mt-1 mb-4 text-sm text-slate-mute">{c.role}</p>
+                  <h3 className="text-xl font-semibold tracking-tight">
+                    {c.title}
+                  </h3>
+
+                  <p className="mt-1 mb-4 text-sm text-slate-mute">
+                    {c.role}
+                  </p>
+
                   <ul className="space-y-1.5">
                     {c.tools.map((t) => {
                       const on = t.id === selected
+
                       return (
                         <li key={t.id}>
                           <button
@@ -163,8 +271,18 @@ export function TechStack() {
                             >
                               {t.glyph}
                             </span>
-                            <span className="font-medium text-ink">{t.name}</span>
-                            <span className={`ml-auto text-xs ${on ? 'text-cyan-neon' : 'text-slate-mute'}`}>
+
+                            <span className="font-medium text-ink">
+                              {t.name}
+                            </span>
+
+                            <span
+                              className={`ml-auto text-xs ${
+                                on
+                                  ? 'text-cyan-neon'
+                                  : 'text-slate-mute'
+                              }`}
+                            >
                               {t.level}
                             </span>
                           </button>

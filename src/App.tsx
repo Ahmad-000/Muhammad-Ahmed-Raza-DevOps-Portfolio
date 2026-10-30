@@ -28,7 +28,7 @@ function Page() {
 
       {/* Always-present base layer: shows while the 3D chunk loads, and if WebGL is unavailable. */}
       <div aria-hidden="true" className="fixed inset-0 z-0">
-        <StaticBackdrop />
+        <StaticBackdrop  />
       </div>
       {webgl && (
         <Suspense fallback={null}>
@@ -37,7 +37,7 @@ function Page() {
       )}
 
       <Nav />
-      <main id="main" className="relative z-10">
+      <main id="main" className="relative z-10" aria-label="Muhammad Ahmed Raza DevOps Portfolio">
         <Hero />
         <IdentitySection />
         <TechStack />

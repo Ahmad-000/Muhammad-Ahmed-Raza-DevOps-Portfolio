@@ -1,3 +1,4 @@
+
 export type Level = 'Expert' | 'Advanced' | 'Proficient'
 
 export interface Tool {
@@ -5,42 +6,43 @@ export interface Tool {
   name: string
   glyph: string
   level: Level
-  /** 0-100, drives the proficiency meter */
+  /** Self-assessed proficiency indicator from 0 to 100. */
   score: number
+  /** Years of hands-on learning and project experience. */
   years: number
+  /** Practical explanation of how the technology is used. */
   uses: string
-  lastRun: string
+  /** Project or practical context where the technology is used. */
+  projectUse: string
 }
 
 export interface Category {
   id: string
   title: string
-  /** What this layer of the platform is responsible for. */
+  /** Responsibility of this technology category. */
   role: string
-  /** Stages shown in the live pipeline readout for tools in this category. */
+  /** Illustrative workflow stages, not a live pipeline execution. */
   flow: string[]
   tools: Tool[]
 }
 
-
-
 export const categories: Category[] = [
   {
     id: 'infra',
-    title: 'Infrastructure and cloud',
-    role: 'Provisioning and managing cloud infrastructure',
+    title: 'Cloud & Infrastructure',
+    role: 'Provisioning, configuring, and managing cloud infrastructure',
     flow: ['configure', 'plan', 'provision', 'verify'],
     tools: [
       {
         id: 'aws',
-        name: 'AWS',
+        name: 'Amazon Web Services (AWS)',
         glyph: 'Aw',
         level: 'Proficient',
         score: 60,
         years: 1,
         uses:
-          'Working with EC2 instances, security groups, IAM, OIDC authentication, and Systems Manager for cloud deployment workflows.',
-        lastRun: 'EC2 deployment environment configured',
+          'Working with AWS EC2, security groups, IAM roles, OIDC authentication, and Systems Manager to build and manage cloud deployment environments.',
+        projectUse: 'AWS EC2 application deployment',
       },
       {
         id: 'terraform',
@@ -50,8 +52,8 @@ export const categories: Category[] = [
         score: 65,
         years: 1,
         uses:
-          'Provisioning AWS infrastructure as Code, including EC2 instances, security groups, and SSH key pairs.',
-        lastRun: 'Terraform plan completed',
+          'Defining AWS infrastructure as code, including EC2 instances, security groups, networking rules, and reusable infrastructure configuration.',
+        projectUse: 'AWS infrastructure provisioning',
       },
       {
         id: 'ansible',
@@ -61,8 +63,8 @@ export const categories: Category[] = [
         score: 60,
         years: 1,
         uses:
-          'Automating Ubuntu server configuration and deploying containerized applications.',
-        lastRun: 'Application deployment playbook configured',
+          'Automating Ubuntu server configuration, managing deployment tasks, and preparing Linux environments for containerized applications.',
+        projectUse: 'Automated server configuration',
       },
       {
         id: 'linux',
@@ -72,15 +74,16 @@ export const categories: Category[] = [
         score: 55,
         years: 1,
         uses:
-          'Using Ubuntu command-line tools, managing application services, and troubleshooting deployment environments.',
-        lastRun: 'Ubuntu EC2 environment',
+          'Using Linux command-line tools, navigating the file system, managing services and permissions, and troubleshooting Ubuntu deployment environments.',
+        projectUse: 'Ubuntu EC2 server management',
       },
     ],
   },
+
   {
     id: 'containers',
-    title: 'Containers and deployment',
-    role: 'Packaging and running applications consistently',
+    title: 'Containers & Deployment',
+    role: 'Building, packaging, and running applications consistently',
     flow: ['build', 'configure', 'run', 'verify'],
     tools: [
       {
@@ -91,8 +94,8 @@ export const categories: Category[] = [
         score: 75,
         years: 1,
         uses:
-          'Building frontend and backend images, writing Dockerfiles, and troubleshooting container health checks.',
-        lastRun: 'Frontend and backend images built',
+          'Writing Dockerfiles, building frontend and backend container images, managing containers, and troubleshooting container health checks.',
+        projectUse: 'Containerized MERN and Todo applications',
       },
       {
         id: 'compose',
@@ -102,8 +105,8 @@ export const categories: Category[] = [
         score: 75,
         years: 1,
         uses:
-          'Running multi-container applications with frontend, backend, and MongoDB services.',
-        lastRun: 'Multi-service configuration prepared',
+          'Defining and running multi-container applications with frontend, backend, and MongoDB services through Docker Compose configuration.',
+        projectUse: 'Multi-container application deployment',
       },
       {
         id: 'nginx',
@@ -113,8 +116,8 @@ export const categories: Category[] = [
         score: 55,
         years: 1,
         uses:
-          'Serving frontend assets over HTTP and configuring reverse proxy routing for application APIs.',
-        lastRun: 'Frontend HTTP serving configured',
+          'Serving frontend application assets over HTTP and configuring reverse proxy routing for backend API requests.',
+        projectUse: 'Frontend hosting and API routing',
       },
       {
         id: 'dockerhub',
@@ -124,15 +127,16 @@ export const categories: Category[] = [
         score: 70,
         years: 1,
         uses:
-          'Building, tagging, publishing, and retrieving custom frontend and backend Docker images.',
-        lastRun: 'Application images published',
+          'Tagging, publishing, versioning, and retrieving custom frontend and backend Docker images for application deployment.',
+        projectUse: 'Docker image publishing and distribution',
       },
     ],
   },
+
   {
     id: 'cicd',
-    title: 'CI/CD and automation',
-    role: 'Automating application delivery',
+    title: 'CI/CD & Automation',
+    role: 'Automating software integration and application delivery',
     flow: ['validate', 'build', 'publish', 'deploy'],
     tools: [
       {
@@ -143,19 +147,19 @@ export const categories: Category[] = [
         score: 75,
         years: 1,
         uses:
-          'Creating CI/CD workflows for application validation, Docker image builds, Docker Hub publishing, and AWS deployment automation.',
-        lastRun: 'CI/CD workflow configured',
+          'Creating CI/CD workflows to validate application code, build Docker images, publish images to Docker Hub, and automate AWS deployment tasks.',
+        projectUse: 'Automated application CI/CD workflows',
       },
       {
         id: 'git',
-        name: 'Git and GitHub',
+        name: 'Git & GitHub',
         glyph: 'Gh',
         level: 'Advanced',
         score: 75,
         years: 1,
         uses:
-          'Managing source code, version control, repository collaboration, and automated workflows.',
-        lastRun: 'Project repositories maintained',
+          'Managing source code with Git, maintaining GitHub repositories, tracking changes, and integrating version control with automated workflows.',
+        projectUse: 'DevOps project source code management',
       },
       {
         id: 'oidc',
@@ -165,8 +169,8 @@ export const categories: Category[] = [
         score: 55,
         years: 1,
         uses:
-          'Configuring GitHub Actions identity federation with AWS IAM roles for short-lived cloud authentication.',
-        lastRun: 'OIDC role integration configured',
+          'Configuring identity federation between GitHub Actions and AWS IAM roles to support short-lived credentials without storing long-term AWS access keys.',
+        projectUse: 'GitHub Actions and AWS authentication',
       },
       {
         id: 'ssm',
@@ -176,27 +180,28 @@ export const categories: Category[] = [
         score: 50,
         years: 1,
         uses:
-          'Working with SSM managed instances and Run Command for SSH-independent deployment automation.',
-        lastRun: 'Deployment integration in progress',
+          'Working with managed EC2 instances and Systems Manager Run Command to execute remote deployment tasks without requiring SSH access from CI/CD runners.',
+        projectUse: 'SSH-independent deployment automation',
       },
     ],
   },
+
   {
     id: 'development',
-    title: 'Application development',
-    role: 'Understanding the applications behind the pipeline',
+    title: 'Application Development',
+    role: 'Understanding and preparing applications for deployment',
     flow: ['develop', 'integrate', 'containerize', 'deploy'],
     tools: [
       {
         id: 'react',
-        name: 'React',
+        name: 'React.js',
         glyph: 'Re',
         level: 'Advanced',
         score: 75,
         years: 2,
         uses:
-          'Building frontend interfaces and preparing React applications for containerized deployment.',
-        lastRun: 'MERN frontend project',
+          'Developing responsive frontend interfaces and preparing React applications for production-oriented containerized deployment.',
+        projectUse: 'MERN and Todo frontend development',
       },
       {
         id: 'node',
@@ -206,8 +211,8 @@ export const categories: Category[] = [
         score: 70,
         years: 2,
         uses:
-          'Developing backend APIs and connecting application services to MongoDB.',
-        lastRun: 'Node.js backend project',
+          'Building backend APIs, managing application services, and connecting Node.js applications to MongoDB databases.',
+        projectUse: 'Backend API development',
       },
       {
         id: 'mongodb',
@@ -217,8 +222,8 @@ export const categories: Category[] = [
         score: 70,
         years: 2,
         uses:
-          'Configuring database connectivity and running MongoDB alongside application services using Docker Compose.',
-        lastRun: 'MongoDB service configured',
+          'Working with NoSQL databases, configuring application database connections, and running MongoDB as a containerized service.',
+        projectUse: 'MongoDB database integration',
       },
       {
         id: 'javascript',
@@ -229,10 +234,8 @@ export const categories: Category[] = [
         years: 2,
         uses:
           'Developing JavaScript applications across React frontend interfaces and Node.js backend services.',
-        lastRun: 'MERN stack development',
+        projectUse: 'Full-stack JavaScript development',
       },
     ],
   },
-] as const;
-
-
+]

@@ -73,7 +73,8 @@ export function IdentitySection() {
       className={staged ? 'relative h-[230svh]' : 'relative py-20 md:py-28'}
     >
       <h2 id="identity-title" className="sr-only">
-        Digital identity
+          About Muhammad Ahmed Raza – Junior DevOps Engineer
+
       </h2>
       <p className="sr-only">{identitySummary}</p>
 

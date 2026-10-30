@@ -1,19 +1,19 @@
+
 import { profile } from './profile'
 
 /**
- * Content for the floating identity card. Name, title and links come from
- * profile.ts so there is one source of truth. Everything else here is exactly
- * what appears on the card: no registration numbers, grades or extra credentials.
+ * Professional identity information for the portfolio's holographic card.
+ * Profile details are reused from profile.ts.
  */
 export const identity = {
-  eyebrow: 'Digital credential',
+  eyebrow: 'Professional Identity',
+
   name: profile.name,
   title: profile.title,
 
-  /** Original photo, served as-is from /public. Cropped with CSS only. */
   photo: {
     src: '/images/profile-photo.jpg',
-    alt: `${profile.name}, portrait`,
+    alt: 'Muhammad Ahmed Raza, Junior DevOps Engineer',
     width: 896,
     height: 1196,
   },
@@ -35,5 +35,12 @@ export const identity = {
   ],
 } as const
 
-/** One sentence for screen readers, so the card's facts are available even while the 3D card is off-screen. */
-export const identitySummary = `${identity.name}, ${identity.title}. ${identity.education.degree}, ${identity.education.university}, ${identity.education.campus}. ${identity.education.status} ${identity.education.year}. ${identity.certification}.`
+/**
+ * Accessible identity description for screen readers.
+ */
+export const identitySummary =
+  `${identity.name}, ${identity.title}. ` +
+  `${identity.education.degree} from ${identity.education.university}, ${identity.education.campus}. ` +
+  `${identity.education.status} in ${identity.education.year}. ` +
+  `${identity.certification}. ` +
+  'Professional portfolio focused on AWS, Azure, Docker, Terraform, Linux, cloud infrastructure, and CI/CD automation.'

@@ -1,3 +1,4 @@
+
 export type NodeKind = 'source' | 'compute' | 'gate' | 'data'
 
 export interface DiagramNode {
@@ -20,52 +21,69 @@ export interface Project {
   id: string
   name: string
   slug: string
-  /** One short result, used in the terminal's `kubectl get projects` table. */
+  /** Short project outcome displayed in the portfolio terminal. */
   headline: string
   summary: string
   tags: string[]
   metrics: { value: string; label: string }[]
-  /** Short live-flow summary shown beside the diagram. */
+  /** Short technical workflow displayed beside the architecture diagram. */
   flow: string[]
   repo: string
-  diagram: { alt: string; nodes: DiagramNode[]; edges: DiagramEdge[] }
+  diagram: {
+    alt: string
+    nodes: DiagramNode[]
+    edges: DiagramEdge[]
+  }
 }
-
 
 export const projects: Project[] = [
   {
     id: 'mern-devops-automation',
     name: 'MERN DevOps Automation',
     slug: 'mern-devops-automation',
-    headline: 'Automated CI/CD Deployment',
+
+    headline: 'Dockerized MERN Deployment with AWS CI/CD',
+
     summary:
-      'Built a containerized MERN application deployment workflow using Docker, Docker Compose, Docker Hub, and AWS EC2. Integrated GitHub Actions for application validation, image builds, publishing, and deployment automation, with AWS OIDC authentication and Systems Manager (SSM) for SSH-independent deployment execution.',
+      'Implemented a containerized MERN stack application deployment workflow using Docker, Docker Compose, Docker Hub, and AWS EC2. Configured GitHub Actions to automate application validation, Docker image builds, image publishing, and deployment workflows. Integrated AWS IAM OpenID Connect (OIDC) authentication and AWS Systems Manager (SSM) to support secure, SSH-independent deployment execution.',
+
     tags: [
+      'DevOps',
       'MERN Stack',
       'Docker',
       'Docker Compose',
       'Docker Hub',
+      'AWS',
       'AWS EC2',
+      'AWS IAM',
+      'OpenID Connect (OIDC)',
+      'AWS Systems Manager',
+      'GitHub Actions',
+      'CI/CD',
+      'Linux',
       'Ubuntu',
       'Nginx',
-      'GitHub Actions',
-      'AWS IAM',
-      'OIDC',
-      'AWS Systems Manager',
+      'MongoDB',
     ],
+
     metrics: [
       { value: 'CI/CD', label: 'GitHub Actions automation' },
-      { value: '2', label: 'custom Docker images' },
-      { value: 'SSM', label: 'SSH-independent deployment approach' },
+      { value: '2', label: 'Frontend and backend Docker images' },
+      { value: 'SSM', label: 'SSH-independent deployment workflow' },
     ],
+
     flow: [
-      'GitHub Actions validates the application and builds frontend and backend Docker images',
-      'Publish versioned application images to Docker Hub',
-      'Use AWS OIDC and Systems Manager to execute deployment commands on EC2',
+      'GitHub Actions validates application code and builds frontend and backend Docker images',
+      'Docker images are tagged and published to Docker Hub',
+      'AWS IAM OIDC authentication and Systems Manager support secure deployment commands on EC2',
     ],
+
     repo: 'https://github.com/Ahmad-000/mern-devops-automation',
+
     diagram: {
-      alt: 'GitHub source code flows into GitHub Actions for validation and Docker image builds. Images are published to Docker Hub, while AWS OIDC and Systems Manager enable deployment to an EC2 instance running the frontend, backend, and MongoDB.',
+      alt:
+        'MERN DevOps architecture showing GitHub source code, GitHub Actions CI/CD automation, Docker image builds, Docker Hub publishing, AWS IAM OIDC authentication, AWS Systems Manager, and application deployment on AWS EC2 with MongoDB.',
+
       nodes: [
         { id: 'git', label: 'GitHub', x: 56, y: 36, kind: 'source' },
         { id: 'ci', label: 'GitHub Actions', x: 168, y: 36, kind: 'gate' },
@@ -76,6 +94,7 @@ export const projects: Project[] = [
         { id: 'ec2', label: 'AWS EC2', x: 168, y: 190, kind: 'compute' },
         { id: 'app', label: 'MERN + MongoDB', x: 280, y: 190, kind: 'data' },
       ],
+
       edges: [
         { from: 'git', to: 'ci' },
         { from: 'ci', to: 'build' },
@@ -88,42 +107,57 @@ export const projects: Project[] = [
       ],
     },
   },
+
   {
     id: 'todos-devops-project',
     name: 'Todo DevOps Project',
     slug: 'todo-devops-project',
-    headline: 'Automated AWS Deployment',
+
+    headline: 'AWS Infrastructure Automation with Terraform',
+
     summary:
-      'Developed a DevOps workflow for deploying a containerized Todo application to AWS. Used Terraform to provision infrastructure, Ansible to configure the server and deploy services, Docker Compose to orchestrate the React frontend, Node.js backend, and MongoDB, and GitHub Actions with Docker Hub for CI/CD automation. AWS OIDC and Systems Manager provide the intended SSH-independent deployment approach.',
+      'Building a DevOps automation workflow for a containerized Todo application using AWS, Terraform, Ansible, Docker, and GitHub Actions. The project uses Terraform to define and provision AWS infrastructure, Ansible for Linux server configuration and application deployment, and Docker Compose to orchestrate React, Node.js, and MongoDB services. GitHub Actions and Docker Hub are used to develop an automated CI/CD workflow, with AWS IAM OIDC and Systems Manager being implemented for secure, SSH-independent deployment.',
+
     tags: [
+      'DevOps',
+      'AWS',
       'AWS EC2',
       'Terraform',
+      'Infrastructure as Code (IaC)',
       'Ansible',
+      'Linux',
       'Docker',
       'Docker Compose',
-      'GitHub Actions',
       'Docker Hub',
+      'GitHub Actions',
+      'CI/CD',
       'AWS IAM',
-      'OIDC',
+      'OpenID Connect (OIDC)',
       'AWS Systems Manager',
       'React',
       'Node.js',
       'MongoDB',
       'Nginx',
     ],
+
     metrics: [
-      { value: 'IaC', label: 'Terraform infrastructure provisioning' },
-      { value: 'CI/CD', label: 'GitHub Actions pipeline' },
-      { value: '3', label: 'application services' },
+      { value: 'IaC', label: 'AWS infrastructure with Terraform' },
+      { value: 'CI/CD', label: 'GitHub Actions automation workflow' },
+      { value: '3', label: 'Frontend, backend, and database services' },
     ],
+
     flow: [
-      'Terraform provisions the Ubuntu EC2 instance and AWS networking access rules',
-      'GitHub Actions builds and publishes application images to Docker Hub',
-      'Ansible configures the server and deploys Docker Compose services, with AWS OIDC and SSM integration',
+      'Terraform defines and provisions AWS EC2 infrastructure and networking resources',
+      'GitHub Actions builds application images and publishes them to Docker Hub',
+      'Ansible configures the Linux server and manages Docker Compose deployment, while AWS OIDC and SSM integration are being implemented',
     ],
+
     repo: 'https://github.com/Ahmad-000/todos-devops-project',
+
     diagram: {
-      alt: 'GitHub contains the Todo application and infrastructure code. GitHub Actions builds and publishes Docker images, Terraform provisions AWS infrastructure, and Ansible deploys the containerized application to EC2. AWS OIDC and Systems Manager support deployment automation.',
+      alt:
+        'Todo application DevOps architecture showing GitHub source code, GitHub Actions CI/CD, Docker Hub image publishing, Terraform AWS infrastructure provisioning, Ansible server configuration, AWS EC2 deployment, React frontend, Node.js backend, MongoDB, and AWS Systems Manager integration.',
+
       nodes: [
         { id: 'git', label: 'GitHub Repo', x: 56, y: 36, kind: 'source' },
         { id: 'ci', label: 'GitHub Actions', x: 168, y: 36, kind: 'gate' },
@@ -134,6 +168,7 @@ export const projects: Project[] = [
         { id: 'app', label: 'React + Node.js', x: 168, y: 190, kind: 'compute' },
         { id: 'db', label: 'MongoDB', x: 280, y: 190, kind: 'data' },
       ],
+
       edges: [
         { from: 'git', to: 'ci' },
         { from: 'ci', to: 'hub' },
@@ -147,5 +182,4 @@ export const projects: Project[] = [
       ],
     },
   },
-] as const;
-
+]
