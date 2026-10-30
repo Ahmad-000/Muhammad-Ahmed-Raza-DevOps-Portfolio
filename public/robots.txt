@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://muhammad-ahmed-raza-dev-ops-portfol.vercel.app/sitemap.xml
